@@ -29,5 +29,35 @@ type Sell struct {
 }
 
 func BuyHandler(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"Transaction Confirmation ID": "99817289"})
+	var buyTransaction Buy
+	// Bind the JSON body to the newItem struct
+	if err := c.ShouldBindJSON(&buyTransaction); err != nil {
+		// If there's an error in binding, return 400 with the error message.
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) // TODO incorporate missing struct field for error
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"Transaction ConfirmationID": 1,
+			"itenName": buyTransaction.ItemName,
+			"userID":   buyTransaction.UserID,
+			"price":    buyTransaction.Price,
+			"quantity": buyTransaction.Quantity})
+		return
+	}
+}
+
+func SellHandler(c *gin.Context) {
+	var sellTransaction Sell
+	// Bind the JSON body to the newItem struct
+	if err := c.ShouldBindJSON(&sellTransaction); err != nil {
+		// If there's an error in binding, return 400 with the error message.
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) // TODO incorporate missing struct field for error
+		return
+	} else {
+		c.JSON(http.StatusOK, gin.H{"Transaction ConfirmationID": 2,
+			"itenName": sellTransaction.ItemName,
+			"userID":   sellTransaction.UserID,
+			"price":    sellTransaction.Price,
+			"quantity": sellTransaction.Quantity})
+		return
+	}
 }

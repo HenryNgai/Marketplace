@@ -26,17 +26,11 @@ func main() {
 // Register API routes
 func registerRoutes(router *gin.Engine) {
 	router.GET("/ping", PingHandler)
-	router.POST("/register", handlers.RegisterUser)
-	router.GET("/getLatest", GetLatestItems)
+	router.POST("/sellItem", handlers.SellHandler)
+	router.POST("/buyItem", handlers.BuyHandler)
 }
 
 // Check server status
 func PingHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": "pong"})
-}
-
-// Get Latest Items
-// TODO
-func GetLatestItems(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{"Item": "price"})
 }
