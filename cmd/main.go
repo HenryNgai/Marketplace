@@ -1,12 +1,12 @@
 package main
 
 import (
-	"Marketplace/internal/handlers"
-	"log"
-	"net/http"
+	"Marketplace/internal/handlers" // Handlers package
+	"log"                           // Logging
+	"net/http"                      // HTTP
 	"os"
 
-	"github.com/gin-gonic/gin"
+	"github.com/gin-gonic/gin" // Gin framework
 )
 
 func main() {
