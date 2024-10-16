@@ -31,5 +31,10 @@ func ConnectToPostgres() (*sql.DB, error) {
 		return nil, err
 	}
 
+	// Ping to test connection
+	if err := db.Ping(); err != nil {
+		return nil, err
+	}
+
 	return db, nil
 }

@@ -15,14 +15,9 @@ func main() {
 	database, err := db.ConnectToPostgres()
 	if err != nil {
 		log.Fatalf("Please try connecting to database again %v", err)
-	} else {
-		err := database.Ping()
-		if err != nil {
-			log.Fatalf("Unable to ping database %v", err)
-		} else {
-			log.Println("Successfuly connected and printed to database")
-		}
 	}
+	log.Println("Successfuly connected and printed to database")
+	defer database.Close() // Delay closing until main program ends
 
 	router := gin.Default() // Creates Gin router. Provides logging and recovery as well.
 
