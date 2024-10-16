@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Marketplace/internal/db"       // db package
 	"Marketplace/internal/handlers" // Handlers package
 	"log"                           // Logging
 	"net/http"                      // HTTP
@@ -10,6 +11,19 @@ import (
 )
 
 func main() {
+	// Connect to DB and verify connection (ping)
+	database, err := db.ConnectToPostgres()
+	if err != nil {
+		log.Fatalf("Please try connecting to database again %v", err)
+	} else {
+		err := database.Ping()
+		if err != nil {
+			log.Fatalf("Unable to ping database %v", err)
+		} else {
+			log.Println("Successfuly connected and printed to database")
+		}
+	}
+
 	router := gin.Default() // Creates Gin router. Provides logging and recovery as well.
 
 	registerRoutes(router) // Register routes
