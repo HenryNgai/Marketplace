@@ -1,6 +1,6 @@
 # Marketplace
 
-![Initial cut of flowchart](./screenshots/flowchart.png)
+![Marketplace_sequence_v0.01](./screenshots/Marketplace_sequence_v0.01.jpg)
 
 - User interacts with only the backend via API calls.
 - This allows for a single user login to manage the database. Useful for scalability
