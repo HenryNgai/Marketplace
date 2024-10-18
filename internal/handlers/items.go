@@ -54,13 +54,6 @@ func SellHandler(c *gin.Context, database *sql.DB) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Unable to parse body of post request"})
 	} else {
-		// Map body to struct
-		c.JSON(http.StatusOK, gin.H{"Transaction ConfirmationID": 2,
-			"itenName": sellTransaction.ItemName,
-			"userID":   sellTransaction.UserID,
-			"price":    sellTransaction.Price,
-			"quantity": sellTransaction.Quantity})
-
 		// Validate the input data
 		if sellTransaction.UserID <= 0 {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid seller ID"})
@@ -71,6 +64,7 @@ func SellHandler(c *gin.Context, database *sql.DB) {
 			return
 		}
 
+		// Execute query
 		listingID, err := InsertSellListing(database, sellTransaction)
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
