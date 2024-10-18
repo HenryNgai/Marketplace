@@ -3,8 +3,9 @@ package main
 import (
 	"Marketplace/internal/db"       // db package
 	"Marketplace/internal/handlers" // Handlers package
-	"log"                           // Logging
-	"net/http"                      // HTTP
+	"database/sql"
+	"log"      // Logging
+	"net/http" // HTTP
 	"os"
 
 	"github.com/gin-gonic/gin" // Gin framework
@@ -21,7 +22,7 @@ func main() {
 
 	router := gin.Default() // Creates Gin router. Provides logging and recovery as well.
 
-	registerRoutes(router) // Register routes
+	registerRoutes(router, database) // Register routes
 
 	// Run the server
 	port := os.Getenv("PORT") // Use environment variable for the port
@@ -33,10 +34,14 @@ func main() {
 }
 
 // Register API routes
-func registerRoutes(router *gin.Engine) {
+func registerRoutes(router *gin.Engine, database *sql.DB) {
 	router.GET("/ping", PingHandler)
-	router.POST("/sellItem", handlers.SellHandler)
-	router.POST("/buyItem", handlers.BuyHandler)
+	router.POST("/sellItem", func(c *gin.Context) { // Anonymous function (also known as closure). Pass database to handler.
+		handlers.SellHandler(c, database)
+	})
+	router.POST("/buyItem", func(c *gin.Context) { // Anonymous function (also known as closure). Pass database to handler.
+		handlers.BuyHandler(c, database)
+	})
 }
 
 // Check server status
