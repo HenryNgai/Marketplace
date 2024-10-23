@@ -124,15 +124,23 @@ func PurchaseListing(db *sql.DB, purchase models.Purchase) (int, error) {
 	return purchase.ListingID, nil
 }
 
-// func GetListing(db *sql.DB, item_ID int) {
-// 	var listing models.Listing
-// 	query := `SELECT id, item_name, user_id, price, quantity FROM listings WHERE id = $1`
-// 	err := db.QueryRow(query, item_ID).Scan(&listing.ID, &listing.ItemName, &listing.UserID, &listing.Price, &listing.Quantity)
-// 	if err != nil {
-// 		if err == sql.ErrNoRows {
-// 			return nil, fmt.Errorf("listing not found")
-// 		}
-// 		return nil, err
-// 	}
-// 	return &listing, nil
-// }
+// GetListing returns a list of all the listings that have the specified itemName
+func GetListing(db *sql.DB, itemName string) ([]models.Listing, error) {
+	query := `SELECT * FROM listings WHERE item_name = $1`
+	rows, err := db.Query(query, itemName)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close() // Close after function execution
+
+	var listings []models.Listing // List of listings
+	for rows.Next() {
+		var listing models.Listing
+		err := rows.Scan(&listing.ListingID, &listing.ItemName, &listing.UserID, &listing.Price, &listing.Quantity)
+		if err != nil {
+			return nil, err
+		}
+		listings = append(listings, listing) // Expensive? Doubles when our of space. Kinda like list in python.
+	}
+	return listings, nil
+}
