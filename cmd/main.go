@@ -39,8 +39,11 @@ func registerRoutes(router *gin.Engine, database *sql.DB) {
 	router.POST("/sellItem", func(c *gin.Context) { // Anonymous function (also known as closure). Pass database to handler.
 		handlers.SellHandler(c, database)
 	})
-	router.POST("/buyItem", func(c *gin.Context) { // Anonymous function (also known as closure). Pass database to handler.
+	router.POST("/buyItem", func(c *gin.Context) {
 		handlers.BuyHandler(c, database)
+	})
+	router.GET("/getListing", func(c *gin.Context) {
+		handlers.GetListingHandler(c, database)
 	})
 }
 

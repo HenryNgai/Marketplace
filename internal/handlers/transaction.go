@@ -74,6 +74,31 @@ func SellHandler(c *gin.Context, database *sql.DB) {
 	}
 }
 
+func GetListingHandler(c *gin.Context, database *sql.DB) {
+	itemName := c.Query("itemName")
+	if itemName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "itemName query parameter is required"})
+		return
+	}
+
+	// Call GetListing to retrieve the listings from the database
+	listings, err := GetListing(database, itemName)
+	if err != nil {
+		// If there was an error querying the database, return an internal server error
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Query successful but no listings
+	if len(listings) == 0 {
+		c.JSON(http.StatusOK, gin.H{"listings": []models.Listing{}})
+		return
+	}
+
+	// Success NOTE: No need for return since c.JSON automatically returns.
+	c.JSON(http.StatusOK, gin.H{fmt.Sprintf("listings for %s", itemName): listings})
+}
+
 // InsertSellListing inserts a new sell listing into the listings table
 func InsertSellListing(db *sql.DB, listing models.Listing) (int, error) {
 	// SQL query to insert a new listing
@@ -138,7 +163,7 @@ func GetListing(db *sql.DB, itemName string) ([]models.Listing, error) {
 		var listing models.Listing
 		err := rows.Scan(&listing.ListingID, &listing.ItemName, &listing.UserID, &listing.Price, &listing.Quantity)
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("could not load query results to listing struct %w", err)
 		}
 		listings = append(listings, listing) // Expensive? Doubles when our of space. Kinda like list in python.
 	}
