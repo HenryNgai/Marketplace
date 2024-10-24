@@ -1,8 +1,8 @@
 package main
 
 import (
-	"Marketplace/internal/db"       // db package
-	"Marketplace/internal/handlers" // Handlers package
+	"Marketplace/internal/db"                    // db package
+	"Marketplace/internal/handlers/transactions" // Handlers package
 	"database/sql"
 	"log"      // Logging
 	"net/http" // HTTP
@@ -37,13 +37,16 @@ func main() {
 func registerRoutes(router *gin.Engine, database *sql.DB) {
 	router.GET("/ping", PingHandler)
 	router.POST("/sellItem", func(c *gin.Context) { // Anonymous function (also known as closure). Pass database to handler.
-		handlers.SellHandler(c, database)
+		transactions.SellHandler(c, database)
 	})
 	router.POST("/buyItem", func(c *gin.Context) {
-		handlers.BuyHandler(c, database)
+		transactions.BuyHandler(c, database)
 	})
 	router.GET("/getListing", func(c *gin.Context) {
-		handlers.GetListingHandler(c, database)
+		transactions.GetListingHandler(c, database)
+	})
+	router.POST("/buyItem", func(c *gin.Context) {
+		transactions.RemoveListingHandler(c, database)
 	})
 }
 
