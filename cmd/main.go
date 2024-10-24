@@ -45,7 +45,7 @@ func registerRoutes(router *gin.Engine, database *sql.DB) {
 	router.GET("/getListing", func(c *gin.Context) {
 		transactions.GetListingHandler(c, database)
 	})
-	router.POST("/buyItem", func(c *gin.Context) {
+	router.DELETE("/buyItem", func(c *gin.Context) {
 		transactions.RemoveListingHandler(c, database)
 	})
 }
